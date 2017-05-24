@@ -1,0 +1,36 @@
+{
+  "extends": ["tslint:latest", "tslint-react"],
+  "rules": {
+    "quotemark": [true, "single", "avoid-escape", "jsx-double"],
+    "no-var-requires": false,
+    "jsx-alignment": true,
+    "jsx-no-lambda": true,
+    "jsx-no-multiline-js": false,
+    "jsx-no-string-ref": true,
+    "jsx-self-close": true,
+    "interface-name": [false],
+    "jsx-boolean-value": false,
+    "object-literal-sort-keys": false,
+    "no-console": ["log", "assert", "debug", "info", "profile", "time", "trace"],
+    "no-object-literal-type-assertion": false,
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
+    "member-ordering": [false],
+    "object-literal-key-quotes": [false],
+    "arrow-parens": false,
+    "no-empty-interface": false
+  },
+  "jsRules": {
+    "arrow-parens": false,
+    "jsx-alignment": true,
+    "jsx-no-lambda": true,
+    "jsx-no-multiline-js": false,
+    "jsx-no-string-ref": true,
+    "jsx-self-close": true,
+    "max-classes-per-file": [false],
+    "object-literal-key-quotes": [true, "as-needed"],
+    "object-literal-sort-keys": false,
+    "quotemark": [true, "single", "avoid-escape", "jsx-double"],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"]
+  },
+  "rulesDirectory": []
+}
