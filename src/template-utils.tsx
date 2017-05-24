@@ -1,28 +1,28 @@
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import * as Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
 
-export function DOCUMENT(headData: Helmet.HelmetProps, app?: JSX.Element) {
-  ReactDOMServer.renderToString(<Helmet {...headData}/>);
+export function DOCUMENT(helmetComponent: React.ReactElement<any>, app?: JSX.Element) {
+  ReactDOMServer.renderToString(helmetComponent);
+
   const renderedApp = {
     __html: app ? ReactDOMServer.renderToString(app) : '',
   };
+  const helmet = Helmet.renderStatic();
 
-  // TODO: remove the below once TS 2.3.3 has been released
-  renderedApp; //tslint:disable-line
+  const htmlAttributes = helmet.htmlAttributes.toComponent();
+  const bodyAttributes = helmet.bodyAttributes.toComponent();
 
-  const head = Helmet.rewind();
-  const attrs = head.htmlAttributes.toComponent();
   return (
-    <html {...attrs as any}>
+    <html {...htmlAttributes}>
       <head>
-        {head.title.toComponent()}
-        {head.meta.toComponent()}
-        {head.link.toComponent()}
+        {helmet.title.toComponent()}
+        {helmet.meta.toComponent()}
+        {helmet.link.toComponent()}
       </head>
-      <body>
+      <body {...bodyAttributes}>
         <div id="content" dangerouslySetInnerHTML={renderedApp} />
-        {head.script.toComponent()}
+        {helmet.script.toComponent()}
       </body>
     </html>
   );
@@ -75,19 +75,17 @@ export function getAssets(compilation: any, chunks: any) {
   return assets;
 }
 
-export function contextToHelmet(webpackCompilation: any): Helmet.HelmetProps {
+export function contextToHelmet(webpackCompilation: any) {
   const assets = getAssets(webpackCompilation, webpackCompilation.chunks);
-  return {
-    htmlAttributes: { lang: 'en' },
-    title: 'Visualization', // TODO
-    link: [
-      // TODO: { rel: 'canonical', href: 'https://www.lucify.com/something' },
-      ...assets.css.map((href: string) => ({ rel: 'stylesheet', href })),
-    ],
-    script: assets.js.map((src: string) => ({ src, type: 'text/javascript' })),
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' },
-    ],
-  };
+
+  return (
+    <Helmet defaultTitle="Visualisation">
+      <html lang="en" />
+      {assets.css.map((href: string) => <link rel="stylesheet" href={href} />)}
+      {/*<link rel="canonical" href="https://www.lucify.com/something" />*/}
+      {assets.js.map((src: string) => <script type="text/javascript" src={src} />)}
+      <meta {...{charset: 'utf-8'} as any} />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    </Helmet>
+  );
 }
