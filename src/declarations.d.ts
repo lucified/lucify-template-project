@@ -1,3 +1,6 @@
+// These are needed to tell TypeScript what the imports for
+// these file types return.
+
 declare module '*.scss' {
   const value: any;
   export = value;
