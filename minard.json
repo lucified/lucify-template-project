@@ -5,7 +5,7 @@
     "commands": ["yarn", "LUCIFY_ENV=staging yarn run build"],
     "cache": {
       "key": "%CI_PROJECT_PATH%",
-      "paths": ["cache/yarn"]
+      "paths": ["node_modules/"]
     }
   }
 }
