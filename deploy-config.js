@@ -10,7 +10,7 @@ const opts = {
     return 'https://protected.lucify.com';
   },
   publicPath: (_env) => {
-    return '/template-project/';
+    return '/';
   },
 };
 
