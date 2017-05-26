@@ -1,7 +1,6 @@
 {
-  "name": "planmeca-iot-ui",
+  "name": "lucify-template-project",
   "version": "0.1.0",
-  "private": true,
   "devDependencies": {
     "@types/classnames": "^2.2.0",
     "@types/lodash": "^4.14.64",
