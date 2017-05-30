@@ -11,7 +11,7 @@
     "interface-name": [false],
     "jsx-boolean-value": false,
     "object-literal-sort-keys": false,
-    "no-console": ["log", "assert", "debug", "info", "profile", "time", "trace"],
+    "no-console": [true, "log", "assert", "debug", "info", "profile", "time", "trace"],
     "no-object-literal-type-assertion": false,
     "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
     "member-ordering": [false],
