@@ -184,7 +184,22 @@ if (['production', 'staging'].indexOf(deployConfig.env) > -1) {
       minimize: true,
       debug: false,
     }),
-    new BabiliPlugin(),
+    // Minify the code.
+    // TODO: Switch to BabiliPlugin in order to get tree-shaking at some point.
+    // It understands ES6 imports while (as of now) UglifyJs doesn't.
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        // This feature has been reported as buggy a few times, such as:
+        // https://github.com/mishoo/UglifyJS2/issues/1964
+        // We'll wait with enabling it by default until it is more solid.
+        reduce_vars: false,
+      },
+      output: {
+        comments: false,
+      },
+      sourceMap: true,
+    }),
   ]);
 }
 
