@@ -59,7 +59,7 @@
     "reselect": "^3.0.0"
   },
   "scripts": {
-    "start": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js --config=webpack.config.dev.js --port 3000 --host 0.0.0.0 --progress --colors",
+    "start": "webpack-dev-server --config=webpack.config.dev.js --port 3000 --host 0.0.0.0 --progress --colors",
     "clean": "rm -rf dist lib build",
     "build": "yarn run clean && webpack --config=webpack.config.js",
     "build-dev": "yarb run clean && webpack --config=webpack.config.dev.js --progress --colors",
