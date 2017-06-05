@@ -23,12 +23,15 @@
     "css-loader": "^0.28.1",
     "file-loader": "^0.11.1",
     "html-webpack-plugin": "^2.28.0",
+    "husky": "^0.13.4",
     "json-loader": "^0.5.4",
+    "lint-staged": "^3.6.0",
     "lucify-deploy-config": "^0.1.8",
     "lucify-notifier": "^0.1.16",
     "node-sass": "^4.5.3",
     "postcss-flexbugs-fixes": "^3.0.0",
     "postcss-loader": "^2.0.4",
+    "prettier": "^1.4.2",
     "react-dev-utils": "^2.0.0",
     "react-error-overlay": "^1.0.5",
     "sass-loader": "^6.0.5",
@@ -66,6 +69,25 @@
     "deploy": "yarn run build && yarn run upload",
     "deploy-chatops": "[ \"$AWS_TEMPORARY\" ] && yarn run deploy-and-notify || echo 'Skipping deployment'",
     "compile": "tsc",
-    "lint": "tslint --format=verbose 'src/**/*.ts' 'src/**/*.tsx' 'src/**/*.js'"
+    "lint": "tslint -t verbose 'src/**/*.ts' 'src/**/*.tsx' 'src/**/*.js'",
+    "prettify": "prettier --parser typescript --single-quote --trailing-comma all --write \"src/**/*.ts?(x)\"",
+    "precommit": "lint-staged"
+  },
+  "engines": {
+    "node": "^7.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "lint-staged": {
+    "*.js?(x)": [
+      "prettier --single-quote --trailing-comma all --write",
+      "git add"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser typescript --single-quote --trailing-comma all --write",
+      "git add"
+    ]
   }
 }
