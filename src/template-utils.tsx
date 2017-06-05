@@ -2,7 +2,10 @@ import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 
-export function DOCUMENT(helmetComponent: React.ReactElement<any>, app?: JSX.Element) {
+export function DOCUMENT(
+  helmetComponent: React.ReactElement<any>,
+  app?: JSX.Element,
+) {
   ReactDOMServer.renderToString(helmetComponent);
 
   const renderedApp = {
@@ -43,7 +46,9 @@ export function getAssets(compilation: any, chunks: any) {
     // Will contain all css files
     css: [],
     // Will contain the html5 appcache manifest files if it exists
-    manifest: Object.keys(compilation.assets).filter(f => f.match(/\.appcache$/))[0],
+    manifest: Object.keys(compilation.assets).filter(f =>
+      f.match(/\.appcache$/),
+    )[0],
   } as any; // tslint:disable-line
 
   for (const chunk of chunks) {
@@ -52,7 +57,9 @@ export function getAssets(compilation: any, chunks: any) {
     assets.chunks[chunkName] = {};
 
     // Prepend the public path to all chunk files
-    const chunkFiles = [].concat(chunk.files).map(chunkFile => publicPath + chunkFile);
+    const chunkFiles = []
+      .concat(chunk.files)
+      .map(chunkFile => publicPath + chunkFile);
 
     // Webpack outputs an array for each chunk when using sourcemaps
     // But we need only the entry file
@@ -81,11 +88,18 @@ export function contextToHelmet(webpackCompilation: any) {
   return (
     <Helmet defaultTitle="Visualisation">
       <html lang="en" />
-      {assets.css.map((href: string) => <link key={href} rel="stylesheet" href={href} />)}
+      {assets.css.map((href: string) =>
+        <link key={href} rel="stylesheet" href={href} />,
+      )}
       {/*<link rel="canonical" href="https://www.lucify.com/something" />*/}
-      {assets.js.map((src: string) => <script key={src} type="text/javascript" src={src} />)}
-      <meta {...{charset: 'utf-8'} as any} />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      {assets.js.map((src: string) =>
+        <script key={src} type="text/javascript" src={src} />,
+      )}
+      <meta {...{ charset: 'utf-8' } as any} />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
     </Helmet>
   );
 }

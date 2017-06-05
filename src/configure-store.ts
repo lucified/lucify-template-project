@@ -10,16 +10,13 @@ declare var module: { hot: any };
 function configureStore(initialState: StateTree, history: History) {
   const routerMiddlewareObject = routerMiddleware(history);
   const composeEnhancers =
-    (process.env.NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+    (process.env.NODE_ENV !== 'production' &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancers(
-      applyMiddleware(
-        routerMiddlewareObject,
-      ),
-    ),
+    composeEnhancers(applyMiddleware(routerMiddlewareObject)),
   );
 
   if (module.hot) {
