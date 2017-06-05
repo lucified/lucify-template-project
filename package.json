@@ -68,6 +68,7 @@
     "deploy-and-notify": "lucify-notifier yarn run deploy",
     "deploy": "yarn run build && yarn run upload",
     "deploy-chatops": "[ \"$AWS_TEMPORARY\" ] && yarn run deploy-and-notify || echo 'Skipping deployment'",
+    "upload": "exit 0",
     "compile": "tsc",
     "lint": "tslint -t verbose 'src/**/*.ts' 'src/**/*.tsx' 'src/**/*.js'",
     "prettify": "prettier --parser typescript --single-quote --trailing-comma all --write \"src/**/*.ts?(x)\"",
