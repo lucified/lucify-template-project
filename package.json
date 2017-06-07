@@ -68,10 +68,12 @@
     "deploy-and-notify": "lucify-notifier yarn run deploy",
     "deploy": "yarn run build && yarn run upload",
     "deploy-chatops": "[ \"$AWS_TEMPORARY\" ] && yarn run deploy-and-notify || echo 'Skipping deployment'",
-    "upload": "exit 0",
+    "upload": "echo \"No upload script specified\" && exit 0",
     "compile": "tsc",
     "lint": "tslint -t verbose 'src/**/*.ts' 'src/**/*.tsx' 'src/**/*.js'",
     "prettify": "prettier --parser typescript --single-quote --trailing-comma all --write \"src/**/*.ts?(x)\"",
+    "lint-staged-stash": "git stash save --keep-index 'lint-staged' && touch .didstash || rm .didstash || true",
+    "lint-staged-stash-pop": "test -f .didstash && rm .didstash && git stash pop || true",
     "precommit": "lint-staged"
   },
   "engines": {
@@ -83,12 +85,16 @@
   ],
   "lint-staged": {
     "*.js?(x)": [
+      "lint-staged-stash",
       "prettier --single-quote --trailing-comma all --write",
-      "git add"
+      "git add",
+      "lint-staged-stash-pop"
     ],
     "*.ts?(x)": [
+      "lint-staged-stash",
       "prettier --parser typescript --single-quote --trailing-comma all --write",
-      "git add"
+      "git add",
+      "lint-staged-stash-pop"
     ]
   }
 }
