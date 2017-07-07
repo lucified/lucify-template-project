@@ -2,7 +2,7 @@ import createHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
+import { Route } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 
 import App from './components/app';
