@@ -20,7 +20,8 @@ const devConfig = {
     // Add /* filename */ comments to generated require()s in the output.
     pathinfo: true,
     // Point sourcemap entries to original disk location
-    devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath),
+    devtoolModuleFilenameTemplate: info =>
+      path.resolve(info.absoluteResourcePath),
   },
 
   // For dev server
@@ -89,7 +90,7 @@ const devConfig = {
     ],
   },
 
-  devtool: 'source-map',
+  devtool: 'cheap-module-eval-source-map',
 
   plugins: [
     // For awesome-typescript-loader's async error reporting, i.e. watch mode
