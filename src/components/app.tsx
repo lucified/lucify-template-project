@@ -10,7 +10,7 @@ type PassedProps = RouteComponentProps<void>;
 
 type Props = PassedProps;
 
-class App extends React.Component<Props, void> {
+class App extends React.Component<Props> {
   public render() {
     return (
       <div className={styles.root}>

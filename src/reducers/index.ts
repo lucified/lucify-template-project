@@ -10,7 +10,7 @@ const defaultState: StateTree = {
 export const initialState = defaultState;
 
 export default combineReducers<StateTree>({
-  routing: routerReducer,
+  routing: routerReducer as any,
 });
 
 export * from './types';
