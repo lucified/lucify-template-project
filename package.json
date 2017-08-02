@@ -67,7 +67,7 @@
     "build-dev": "yarb run clean && webpack --config=webpack.config.dev.js --progress --colors",
     "deploy-and-notify": "lucify-notifier yarn run deploy",
     "deploy": "yarn run build && yarn run upload",
-    "deploy-chatops": "[ \"$AWS_TEMPORARY\" ] && yarn run deploy-and-notify || echo 'Skipping deployment'",
+    "deploy-chatops": "[ -z \"$AWS_TEMPORARY\" ] || yarn run deploy-and-notify",
     "upload": "echo \"No upload script specified\" && exit 0",
     "compile": "tsc",
     "lint": "tslint -t verbose 'src/**/*.ts' 'src/**/*.tsx' 'src/**/*.js'",
