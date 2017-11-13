@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 7.8
+    version: 8.9
   environment:
     PROJECT: $CIRCLE_PROJECT_REPONAME
     BRANCH: $CIRCLE_BRANCH
