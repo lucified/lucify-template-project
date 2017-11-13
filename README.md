@@ -5,7 +5,7 @@ and Lucify's own visualisation projects.
 
 ## Development
 
-Requires Node 6 or greater and `yarn`.
+Requires Node 8 or greater and `yarn`.
 
 Set up the development environment with:
 ```shell
