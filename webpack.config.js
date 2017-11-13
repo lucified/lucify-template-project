@@ -161,7 +161,7 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(
         ['production', 'staging'].indexOf(deployConfig.env) > -1
           ? 'production'
-          : 'development',
+          : 'development'
       ),
     }),
   ],
