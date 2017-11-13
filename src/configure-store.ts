@@ -10,14 +10,9 @@ declare var module: { hot: any };
 
 function configureStore(initialState: StateTree) {
   /**
-   * Use composeEnhancers if you wish to use middleware
+   * Use composeEnhancers if you wish to use middleware. See:
+   * https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
    */
-  /*
-  const composeEnhancers =
-    (process.env.NODE_ENV !== 'production' &&
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-    compose;
-  */
   const store = createStore(
     rootReducer,
     initialState,
