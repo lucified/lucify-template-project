@@ -1,4 +1,3 @@
-import { routerReducer } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
 import { StateTree } from './types';
@@ -9,8 +8,6 @@ const defaultState: StateTree = {
 
 export const initialState = defaultState;
 
-export default combineReducers<StateTree>({
-  routing: routerReducer as any,
-});
+export default combineReducers<StateTree>({});
 
 export * from './types';

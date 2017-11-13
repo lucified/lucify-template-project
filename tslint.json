@@ -3,8 +3,8 @@
   "rules": {
     "quotemark": [true, "single", "avoid-escape", "jsx-double"],
     "no-var-requires": false,
-    "jsx-alignment": true,
-    "jsx-no-lambda": true,
+    "jsx-alignment": false,
+    "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
     "jsx-no-string-ref": true,
     "jsx-self-close": true,
@@ -19,7 +19,9 @@
     "object-literal-key-quotes": [false],
     "arrow-parens": false,
     "no-empty-interface": false,
-    "semicolon": [true, "always", "ignore-bound-class-methods"]
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false
   },
   "jsRules": {
     "arrow-parens": false,

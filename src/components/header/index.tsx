@@ -1,10 +1,25 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
-import * as styles from './index.scss';
+const Root = styled.div`
+  margin-top: 0px;
+`;
 
-const Header = () =>
-  <div className={styles.root}>
-    <div className={styles.top}>Header</div>
-  </div>;
+const Top = styled.div`
+  background-color: $color-gray;
+  height: 40px;
+  display: flex;
+  align-items: center;
+`;
+
+interface Props {
+  className?: string;
+}
+
+const Header = ({ className }: Props) => (
+  <Root className={className}>
+    <Top>Header</Top>
+  </Root>
+);
 
 export default Header;

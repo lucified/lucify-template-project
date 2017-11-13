@@ -3,10 +3,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const postCssFlexbugsFixer = require('postcss-flexbugs-fixes');
 const webpack = require('webpack');
-
 const deployConfig = require('./deploy-config');
 
 const name = '[name]-[hash:8].[ext]';
+
+const browsers = [
+  '>1%',
+  'last 4 versions',
+  'Firefox ESR',
+  'not ie < 9', // React doesn't support IE8 anyway
+];
 
 /*
  * Get the webpack loaders object for the webpack configuration
@@ -22,12 +28,14 @@ const rules = [
         useCache: true,
         babelOptions: {
           presets: [
-            // Make babel not transform modules since webpack 2 supports ES6 modules
-            // This should allow webpack to perform tree-shaking.
-            // TODO: Tree-shaking doesn't seem to work. Change tsconfig to
-            // output ES6 modules once this is fixed:
-            // https://github.com/webpack/webpack/issues/2867
-            ['es2015', { modules: false }],
+            [
+              'env',
+              {
+                targets: {
+                  browsers,
+                },
+              },
+            ],
           ],
           // Needed in order to transform generators. Babelification can be removed
           // once TypeScript supports generators, probably in TS 2.3.
@@ -39,55 +47,26 @@ const rules = [
   },
   {
     test: /\.svg$/,
-    use: [{
-      loader: require.resolve('url-loader'),
-      options: {
-        limit: 10000,
-        mimetype: 'image/svg+xml',
-        name,
-      },
-    }],
-  },
-  {
-    test: /\.(jpeg|jpg|gif|png|eot|woff2|woff|ttf)$/,
-    use: [{
-      loader: require.resolve('file-loader'),
-      options: {
-        name,
-      },
-    }],
-  },
-  {
-    test: /\.scss$/,
     use: [
-      require.resolve('style-loader'),
       {
-        loader: require.resolve('css-loader'),
+        loader: require.resolve('url-loader'),
         options: {
-          modules: true,
-          importLoaders: 2,
-          localIdentName: '[name]__[local]___[hash:base64:5]',
+          limit: 10000,
+          mimetype: 'image/svg+xml',
+          name,
         },
       },
+    ],
+  },
+  {
+    test: /\.(jpeg|jpg|gif|png)$/,
+    use: [
       {
-        loader: require.resolve('postcss-loader'),
+        loader: require.resolve('file-loader'),
         options: {
-          ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-          plugins: () => [
-            postCssFlexbugsFixer,
-            autoprefixer({
-              browsers: [
-                '>1%',
-                'last 4 versions',
-                'Firefox ESR',
-                'not ie < 9', // React doesn't support IE8 anyway
-              ],
-              flexbox: 'no-2009',
-            }),
-          ],
+          name,
         },
       },
-      require.resolve('sass-loader'),
     ],
   },
   {
@@ -108,12 +87,7 @@ const rules = [
           plugins: () => [
             postCssFlexbugsFixer,
             autoprefixer({
-              browsers: [
-                '>1%',
-                'last 4 versions',
-                'Firefox ESR',
-                'not ie < 9', // React doesn't support IE8 anyway
-              ],
+              browsers,
               flexbox: 'no-2009',
             }),
           ],
@@ -121,13 +95,31 @@ const rules = [
       },
     ],
   },
+  {
+    test: /\.svg$/,
+    use: [
+      {
+        loader: require.resolve('url-loader'),
+        options: {
+          limit: 10000,
+          mimetype: 'image/svg+xml',
+          name,
+        },
+      },
+    ],
+  },
+  {
+    test: /\.(woff|woff2|eot|ttf)$/,
+    use: [
+      {
+        loader: require.resolve('file-loader'),
+        options: {
+          name: 'fonts/[name].[ext]',
+        },
+      },
+    ],
+  },
 ];
-
-const htmlWebpackPluginConfig = {
-  template: require.resolve(`${__dirname}/src/index-template.tsx`),
-  inject: false,
-  filename: 'index.html',
-};
 
 const config = {
   resolve: {
@@ -139,43 +131,54 @@ const config = {
   },
   output: {
     filename: 'index-[hash].js',
-    path: path.resolve(deployConfig.base.dest),
+    path: path.join(__dirname, deployConfig.base.dest),
     publicPath: deployConfig.base.publicPath,
   },
   entry: [
+    require.resolve('whatwg-fetch'),
     require.resolve('babel-polyfill'),
     './src/index.tsx',
   ],
   plugins: [
-    new HtmlWebpackPlugin(htmlWebpackPluginConfig),
-    new webpack.DefinePlugin({
-      'process.env.ENV': JSON.stringify(deployConfig.env),
+    new HtmlWebpackPlugin({
+      template: require.resolve(`${__dirname}/src/index-template.tsx`),
+      inject: false,
+      filename: 'index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
     }),
-    // This skips adding all locales to moment. NOTE: If more locales then 'en'
-    // are needed, another approach will need to be used.
-    // https://github.com/moment/moment/issues/2373#issuecomment-279785426
-    // See also:
-    // https://github.com/webpack/webpack/issues/3128
-    // https://github.com/moment/moment/issues/2517
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(
+        ['production', 'staging'].indexOf(deployConfig.env) > -1
+          ? 'production'
+          : 'development',
+      ),
+    }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {
+    dgram: 'empty',
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
+    child_process: 'empty',
   },
 };
 
 if (['production', 'staging'].indexOf(deployConfig.env) > -1) {
   config.bail = true;
   config.plugins = config.plugins.concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
-      },
-    }),
     // LopaderOptionsPlugin with minimize:true will be removed in Webpack 3.
     // Will need to add minimize: true to loaders at that point.
     // See https://webpack.js.org/guides/migrating/#uglifyjsplugin-minimize-loaders
@@ -184,18 +187,23 @@ if (['production', 'staging'].indexOf(deployConfig.env) > -1) {
       debug: false,
     }),
     // Minify the code.
-    // TODO: Switch to BabiliPlugin in order to get tree-shaking at some point.
-    // It understands ES6 imports while (as of now) UglifyJs doesn't.
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
-        // This feature has been reported as buggy a few times, such as:
-        // https://github.com/mishoo/UglifyJS2/issues/1964
-        // We'll wait with enabling it by default until it is more solid.
-        reduce_vars: false,
+        // Disabled because of an issue with Uglify breaking seemingly valid code:
+        // https://github.com/facebookincubator/create-react-app/issues/2376
+        // Pending further investigation:
+        // https://github.com/mishoo/UglifyJS2/issues/2011
+        comparisons: false,
+      },
+      mangle: {
+        safari10: true,
       },
       output: {
         comments: false,
+        // Turned on because emoji and regex is not minified properly using default
+        // https://github.com/facebookincubator/create-react-app/issues/2488
+        ascii_only: true,
       },
       sourceMap: true,
     }),

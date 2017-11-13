@@ -3,9 +3,9 @@
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const path = require('path');
-const errorOverlayMiddleware = require('react-error-overlay/middleware');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 
 const productionConfig = require('./webpack.config.js');
@@ -27,13 +27,7 @@ const devConfig = {
   // For dev server
   devServer: {
     publicPath: '/',
-    // For react-router's browserHistory
-    historyApiFallback: {
-      // Needed for handling react-router params that contain dots, i.e. raw deployment redirects:
-      // https://github.com/ReactTraining/react-router/issues/3409#issuecomment-272023984
-      disableDotRule: true,
-    },
-    setup(app) {
+    before(app) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());
     },
@@ -54,16 +48,26 @@ const devConfig = {
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.
     clientLogLevel: 'none',
+    // WebpackDevServer is noisy by default so we emit custom message instead
+    // by listening to the compiler events with `compiler.plugin` calls above.
+    // quiet: true,
+    overlay: false,
+    historyApiFallback: {
+      // Paths with dots should still use the history fallback.
+      // See https://github.com/facebookincubator/create-react-app/issues/387.
+      disableDotRule: true,
+    },
   },
 
   entry: [
+    require.resolve('whatwg-fetch'),
     require.resolve('babel-polyfill'),
-    // Errors should be considered fatal in development
-    require.resolve('react-error-overlay'),
+    require.resolve('react-dev-utils/webpackHotDevClient'),
     './src/index.tsx',
   ],
 
   module: {
+    strictExportPresence: true,
     rules: [
       // For source maps
       {
@@ -81,7 +85,22 @@ const devConfig = {
             useBabel: true,
             useCache: true,
             babelOptions: {
-              presets: ['es2015', 'react-hmre'],
+              presets: [
+                [
+                  'env',
+                  {
+                    targets: {
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9', // React doesn't support IE8 anyway
+                      ],
+                    },
+                  },
+                ],
+                'react-hmre',
+              ],
               plugins: ['transform-regenerator'],
             },
           },

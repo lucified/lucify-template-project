@@ -88,13 +88,13 @@ export function contextToHelmet(webpackCompilation: any) {
   return (
     <Helmet defaultTitle="Visualisation">
       <html lang="en" />
-      {assets.css.map((href: string) =>
-        <link key={href} rel="stylesheet" href={href} />,
-      )}
+      {assets.css.map((href: string) => (
+        <link key={href} rel="stylesheet" href={href} />
+      ))}
       {/*<link rel="canonical" href="https://www.lucify.com/something" />*/}
-      {assets.js.map((src: string) =>
-        <script key={src} type="text/javascript" src={src} />,
-      )}
+      {assets.js.map((src: string) => (
+        <script key={src} type="text/javascript" src={src} />
+      ))}
       <meta {...{ charset: 'utf-8' } as any} />
       <meta
         name="viewport"

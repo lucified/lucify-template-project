@@ -1,22 +1,28 @@
-import { History } from 'history';
-import { routerMiddleware } from 'react-router-redux';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { createStore } from 'redux';
 
 import rootReducer, { StateTree } from './reducers';
 
-declare var window: { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any };
+declare var window: {
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+  __REDUX_DEVTOOLS_EXTENSION__: any;
+};
 declare var module: { hot: any };
 
-function configureStore(initialState: StateTree, history: History) {
-  const routerMiddlewareObject = routerMiddleware(history);
+function configureStore(initialState: StateTree) {
+  /**
+   * Use composeEnhancers if you wish to use middleware
+   */
+  /*
   const composeEnhancers =
     (process.env.NODE_ENV !== 'production' &&
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
+  */
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(routerMiddlewareObject)),
+    window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      window.__REDUX_DEVTOOLS_EXTENSION__(),
   );
 
   if (module.hot) {

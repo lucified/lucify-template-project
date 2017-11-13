@@ -1,31 +1,37 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 
-import Footer from './footer';
+import 'normalize.css/normalize.css';
+import './fonts.css';
+
+import './app.css';
+
 import Header from './header';
 
-import * as styles from './app.scss';
+const Root = styled.div`
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+`;
+const HeaderContainer = styled.div`
+  flex: 0 1 auto;
+`;
+const Content = styled.div`
+  flex: 1 1 auto;
+  position: relative;
+`;
 
-type PassedProps = RouteComponentProps<void>;
-
-type Props = PassedProps;
+interface Props {}
 
 class App extends React.Component<Props> {
   public render() {
     return (
-      <div className={styles.root}>
-        <div className={styles.header}>
+      <Root>
+        <HeaderContainer>
           <Header />
-        </div>
-        <div className={styles.content}>
-          <Switch>
-            <Route path="/" component={undefined} />
-          </Switch>
-        </div>
-        <div className={styles.footer}>
-          <Footer />
-        </div>
-      </div>
+        </HeaderContainer>
+        <Content>Content</Content>
+      </Root>
     );
   }
 }
