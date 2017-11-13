@@ -69,7 +69,7 @@
     "prettify": "prettier --single-quote --trailing-comma all --write \"src/**/*.ts?(x)\" \"src/**/*.scss\""
   },
   "engines": {
-    "node": "^8.0.0"
+    "node": "^8.9.0"
   },
   "browserslist": [
     "> 1%",
